@@ -23,10 +23,8 @@ import org.springframework.util.StringUtils;
 
 import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service("courseService")
 public class CourseMgmtServiceImpl implements ICourseMgmtService{
@@ -92,16 +90,12 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
             BeanUtils.copyProperties(course, searchResultEntity);
             searchResultsList.add(searchResultEntity);
         });*/
-
-        List<SearchResult> searchResultsList = iCourseDetailsRepo.findAll().stream()
+        return iCourseDetailsRepo.findAll(example).stream()
                 .map(course -> {
                     SearchResult searchResult = new SearchResult();
                     BeanUtils.copyProperties(course, searchResult);
                     return searchResult;
-                })
-                .collect(Collectors.toList());
-
-        return searchResultsList;
+                }).toList();
     }
 
     @Override
