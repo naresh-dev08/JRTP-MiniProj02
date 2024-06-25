@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class CourseDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer courseID;
     @Column(length = 50)
     private String courseName;
@@ -42,10 +42,10 @@ public class CourseDetails {
 
 
     @CreationTimestamp
-    @Column(insertable = true, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdDate;
     @UpdateTimestamp
-    @Column(insertable = false, updatable = true)
+    @Column(insertable = false)
     private LocalDateTime updatedDate;
 
     @Column(length = 25)

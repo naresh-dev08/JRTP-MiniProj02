@@ -1,9 +1,12 @@
+server:
+  port: 4041
+
 spring:
   application:
     name: jrtp-miniproj02
   jpa:
     show-sql: true
-    database-platform: org.mysql.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
   datasource:
@@ -11,3 +14,6 @@ spring:
     url: jdbc:mysql:///jrtp701db
     username: root
     password: root
+  sql:
+    init:
+      mode: never
