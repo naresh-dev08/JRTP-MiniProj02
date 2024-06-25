@@ -16,4 +16,4 @@ spring:
     password: root
   sql:
     init:
-      mode: never
+      mode: always

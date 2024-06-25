@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service("courseService")
 public class CourseMgmtServiceImpl implements ICourseMgmtService{
@@ -83,22 +84,22 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
         Example<CourseDetails> example = Example.of(courseDetails);
 
         //perform search operation with filters of example obj
-        List<CourseDetails> courseDetailsList = iCourseDetailsRepo.findAll(example);
+        /*List<CourseDetails> courseDetailsList = iCourseDetailsRepo.findAll(example);
         //convert list<CourseDetails> obj to List<SearchResult> obj
         List<SearchResult> searchResultsList = new ArrayList<>();
         courseDetailsList.forEach(course -> {
             SearchResult searchResultEntity = new SearchResult();
             BeanUtils.copyProperties(course, searchResultEntity);
             searchResultsList.add(searchResultEntity);
-        });
+        });*/
 
-       /* List<SearchResult> searchResultsList = iCourseDetailsRepo.findAll().stream()
+        List<SearchResult> searchResultsList = iCourseDetailsRepo.findAll().stream()
                 .map(course -> {
                     SearchResult searchResult = new SearchResult();
                     BeanUtils.copyProperties(course, searchResult);
                     return searchResult;
                 })
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
 
         return searchResultsList;
     }
