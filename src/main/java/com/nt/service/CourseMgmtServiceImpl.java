@@ -22,9 +22,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service("courseService")
 public class CourseMgmtServiceImpl implements ICourseMgmtService{
@@ -95,7 +99,7 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
                     SearchResult searchResult = new SearchResult();
                     BeanUtils.copyProperties(course, searchResult);
                     return searchResult;
-                }).toList();
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -313,22 +317,33 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
     public void generateAllDataPDFReport(HttpServletResponse httpServletResponse) throws Exception {
 
         //get the All CourseDetail obj data  from DB and convert it into SearchResult obj
+
+        /*List<CourseDetails> courseDetailsList = iCourseDetailsRepo.findAll();
+        //Create the List of SearchResult obj
+        List<SearchResult> searchResultsList = new ArrayList<>();
+
+        courseDetailsList.forEach(courseDetails -> {
+            SearchResult searchResult = new SearchResult();
+            BeanUtils.copyProperties(courseDetails, searchResult);
+            searchResultsList.add(searchResult);
+        });*/
+
         List<SearchResult> searchResultsList = iCourseDetailsRepo.findAll().stream()
                 .map(courseDetails -> {
                     SearchResult searchResult = new SearchResult();
                     // Copy properties from courseDetails to searchResult
                     BeanUtils.copyProperties(courseDetails, searchResult);
                     return searchResult;
-                })  /* .collect(Collectors.toList()); */
-                .toList();
+                }).toList();
 
         //Create Document obj (OpenPDF)
-        Document document = new Document(PageSize.A4);
+        Document document = new Document(PageSize.LETTER);
         //Get the PDFWriter to write the document and response obj
         PdfWriter.getInstance(document, httpServletResponse.getOutputStream());
         //Open the PDF Document
         document.open();
-        //Define font for the Paragraph
+
+        /* //Define font for the Paragraph
         Font font = FontFactory.getFont(FontFactory.TIMES_BOLD);
         font.setSize(30);
         font.setColor(Color.RED);
@@ -371,8 +386,41 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
         pdfPCell.setPhrase(new Phrase("Location", cellFont));
         pdfTable.addCell(pdfPCell);
         pdfPCell.setPhrase(new Phrase("AdminContact", cellFont));
-        pdfTable.addCell(pdfPCell);
+        pdfTable.addCell(pdfPCell);  */
 
+
+            // Set up a table with 6 columns
+            PdfPTable pdfTable = new PdfPTable(10);
+            pdfTable.setWidthPercentage(100);
+
+        // Document Title (formatted as a paragraph)
+        Paragraph title = new Paragraph("Search Report of Courses",
+                new Font(FontFactory.getFont(FontFactory.HELVETICA_BOLD).getBaseFont(), 16, Font.BOLD, Color.BLACK));
+        title.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(title);
+
+            // Set up header cells with red background
+            Font headerFont = new Font(Font.HELVETICA, 12f, Font.BOLD, Color.WHITE);
+       /* Paragraph paragraph = new Paragraph("Search Report of Courses", headerFont);
+        paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+        //Add paragraph to document
+        document.add(paragraph);*/
+            PdfPCell cell;
+
+        //create the Paragraph having content and above font style
+        document.add(new Phrase("Generated on: " + new Date(),
+                new Font(FontFactory.getFont(FontFactory.HELVETICA).getBaseFont(), 10)));
+
+            // Add headers
+            String[] headers = {"CourseID", "CourseName", "CourseCategory", "FacultyName", "Fee", "TrainingMode",
+                                 "CourseStatus", "StartDate", "Location", "AdminContact"};
+            for (String header : headers) {
+                cell = new PdfPCell(new Phrase(header, headerFont));
+                cell.setBackgroundColor(Color.RED);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+            }
+        PdfPCell DataCell;
         //add data cells to PdfTable
         searchResultsList.forEach(searchResult -> {
             pdfTable.addCell(String.valueOf(searchResult.getCourseID()));

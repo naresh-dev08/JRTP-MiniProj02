@@ -24,9 +24,9 @@ public class CoursesReportOperationsController {
         try {
             //use service
             Set<String> courseCategoriesInfo = courseService.showAllCourseCategories();
-            return new ResponseEntity<Set<String>>(courseCategoriesInfo, HttpStatus.OK);
+            return new ResponseEntity<>(courseCategoriesInfo, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -35,9 +35,9 @@ public class CoursesReportOperationsController {
         try {
             //use service
             Set<String> facultyNamesInfo = courseService.showAllFacultyNames();
-            return new ResponseEntity<Set<String>>(facultyNamesInfo, HttpStatus.OK);
+            return new ResponseEntity<>(facultyNamesInfo, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -46,9 +46,9 @@ public class CoursesReportOperationsController {
         try {
             //use service
             Set<String> trainingModesInfo = courseService.showAllTaringModes();
-            return new ResponseEntity<Set<String>>(trainingModesInfo, HttpStatus.OK);
+            return new ResponseEntity<>(trainingModesInfo, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -57,9 +57,9 @@ public class CoursesReportOperationsController {
         try {
             //use service
             List<SearchResult> searchResultsList = courseService.showCoursesByFilters(inputs);
-            return new ResponseEntity<List<SearchResult>>(searchResultsList, HttpStatus.OK);
+            return new ResponseEntity<>(searchResultsList, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -91,7 +91,7 @@ public class CoursesReportOperationsController {
         }
     }//method() end
 
-    @GetMapping("/All-pdf-report")
+    @GetMapping("/all-pdf-report")
     public void showPDFReportAllData(HttpServletResponse httpServletResponse) {
         try {
             //set the Response content type
@@ -105,7 +105,7 @@ public class CoursesReportOperationsController {
         }
     }//method() end
 
-    @PostMapping("/all-excel-report")
+    @GetMapping("/all-excel-report")
     public void showExcelReportAllData(HttpServletResponse httpServletResponse) {
         try {
             //set the Response content type
