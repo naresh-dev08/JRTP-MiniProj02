@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: jrtp-miniproj02
+  jpa:
+    show-sql: true
+    database-platform: org.mysql.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///jrtp701db
+    username: root
+    password: root
