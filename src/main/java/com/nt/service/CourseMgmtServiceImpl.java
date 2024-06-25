@@ -22,9 +22,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.awt.*;
-import java.io.FileOutputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -337,7 +335,7 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
                 }).toList();
 
         //Create Document obj (OpenPDF)
-        Document document = new Document(PageSize.LETTER);
+        Document document = new Document(PageSize.A4.rotate()); //use landscape mode for more width
         //Get the PDFWriter to write the document and response obj
         PdfWriter.getInstance(document, httpServletResponse.getOutputStream());
         //Open the PDF Document
@@ -388,41 +386,131 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
         pdfPCell.setPhrase(new Phrase("AdminContact", cellFont));
         pdfTable.addCell(pdfPCell);  */
 
-
-            // Set up a table with 6 columns
-            PdfPTable pdfTable = new PdfPTable(10);
-            pdfTable.setWidthPercentage(100);
-
         // Document Title (formatted as a paragraph)
         Paragraph title = new Paragraph("Search Report of Courses",
-                new Font(FontFactory.getFont(FontFactory.HELVETICA_BOLD).getBaseFont(), 16, Font.BOLD, Color.BLACK));
+                new Font(FontFactory.getFont(FontFactory.TIMES_ROMAN).getBaseFont(), 40, Font.BOLD, Color.BLACK));
         title.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(title);
 
+        // Set up a table with 10 columns
+        PdfPTable pdfTable = new PdfPTable(10);
+        pdfTable.setWidths(new float[] {1.5f, 3.5f, 3.0f, 2.5f, 1.5f, 2.5f, 2.0f, 3.5f, 2.0f, 2.5f});
+        pdfTable.setWidthPercentage(100);
+        pdfTable.setSpacingBefore(10.0f);
+
             // Set up header cells with red background
-            Font headerFont = new Font(Font.HELVETICA, 12f, Font.BOLD, Color.WHITE);
+          //  Font headerFont = new Font(Font.HELVETICA, 12f, Font.BOLD, Color.WHITE);
        /* Paragraph paragraph = new Paragraph("Search Report of Courses", headerFont);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
         //Add paragraph to document
         document.add(paragraph);*/
-            PdfPCell cell;
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 10.0f, Font.BOLD, Color.RED);
 
         //create the Paragraph having content and above font style
         document.add(new Phrase("Generated on: " + new Date(),
-                new Font(FontFactory.getFont(FontFactory.HELVETICA).getBaseFont(), 10)));
+                new Font(FontFactory.getFont(FontFactory.HELVETICA).getBaseFont(), 15.0f)));
 
             // Add headers
             String[] headers = {"CourseID", "CourseName", "CourseCategory", "FacultyName", "Fee", "TrainingMode",
-                                 "CourseStatus", "StartDate", "Location", "AdminContact"};
+                                 "Status", "StartDate", "Location", "AdminContact"};
             for (String header : headers) {
-                cell = new PdfPCell(new Phrase(header, headerFont));
-                cell.setBackgroundColor(Color.RED);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                PdfPCell  cell = new PdfPCell(new Phrase(header, headerFont));
+                cell.setBackgroundColor(Color.white);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setVerticalAlignment(Element.ALIGN_CENTER);
                 pdfTable.addCell(cell);
             }
-        PdfPCell DataCell;
+        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10.0f, Font.BOLD, Color.BLACK);
+            for (SearchResult searchResult : searchResultsList) {
+                PdfPCell  cell;
+                cell = new PdfPCell(new Phrase(String.valueOf(searchResult.getCourseID()), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getCourseName(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getCourseCategory(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getFacultyName(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(String.valueOf(searchResult.getFee()), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getTrainingMode(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getCourseStatus(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getStartOn().toString(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(searchResult.getLocation(), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(String.valueOf(searchResult.getAdminContact()), dataFont));
+                cell.setBackgroundColor(Color.WHITE);
+                cell.setPadding(5);
+                cell.setFixedHeight(20);
+                cell.setNoWrap(true);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfTable.addCell(cell);
+
+            }
+
+
         //add data cells to PdfTable
-        searchResultsList.forEach(searchResult -> {
+       /* searchResultsList.forEach(searchResult -> {
             pdfTable.addCell(String.valueOf(searchResult.getCourseID()));
             pdfTable.addCell(searchResult.getCourseName());
             pdfTable.addCell(searchResult.getCourseCategory());
@@ -433,7 +521,7 @@ public class CourseMgmtServiceImpl implements ICourseMgmtService{
             pdfTable.addCell(searchResult.getStartOn().toString());
             pdfTable.addCell(searchResult.getLocation());
             pdfTable.addCell(String.valueOf(searchResult.getAdminContact()));
-        });
+        });*/
 
         //add table to document
         document.add(pdfTable);
